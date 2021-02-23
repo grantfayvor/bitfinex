@@ -14,7 +14,7 @@ const findBestMatch = (order, db) => {
   };
 
   for (let key in db) {
-    if (db[key].type !== matchType || db[key].lock) {
+    if (db[key].type !== matchType || db[key].from === order.from || db[key].lock) {
       continue;
     }
 
@@ -53,7 +53,7 @@ module.exports = (db = {}, from = 0) => {
       return;
     }
 
-    // if the locked order here has already been locked by another client. Release this match and retry the matcher.
+    // if the locked order here has already been locked by another client. Release this match and retry the matcher algorithm.
     const { data } = await sendMessage({ type: 'LOCK_ORDER', data: { ...match, lockedBy: order.from }, from });
 
     // check that the number of successes returned is equal to the number of clients - 1
